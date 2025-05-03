@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <!-- Metadados básicos -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiosque Céu Azul</title>
+    <link rel="icon" href="https://png.pngtree.com/png-clipart/20220123/original/pngtree-coconut-tree-png-image_7166495.png" type="image/png">
+
+    
+    <!-- Fontes do Google -->
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Estilos CSS -->
+    <style>
+        /* Reset básico e estilos globais */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Nunito Sans', 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        /* Variáveis de cores para o tema */
+        :root {
+            --azul-ceu: #87CEEB;
+            --azul-marinho: #1E3F66;
+            --branco-nuvem: #F8F9FA;
+            --dourado-sol: #FFD700;
+            --verde-agua: #7FFFD4;
+            --azul-escuro: #0A1F3A;
+            --roxo-crepusculo: #6A5ACD;
+        }
+        
+        /* Estilos do corpo principal */
+        body {
+            background: var(--branco-nuvem);
+            color: #333;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        /* Estilos para o tema escuro */
+        body.tema-escuro {
+            background: var(--azul-escuro);
+            color: #f0f0f0;
+        }
+        
+        body.tema-escuro .item {
+            background: #162A47;
+            color: #f0f0f0;
+            border: 1px solid #2A4365;
+        }
+        
+        body.tema-escuro .item-descricao {
+            color: #b0b0b0;
+        }
+        
+        body.tema-escuro .aba-btn {
+            background: #162A47;
+            color: #f0f0f0;
+            border-color: #2A4365;
+        }
+        
+        /* Estilos do cabeçalho */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px 20px;
+            background: 
+                /* Gradiente com transparência */
+                linear-gradient(to bottom, 
+                    rgba(135, 206, 235, 0.3),  /* var(--azul-ceu) com 30% de opacidade */
+                    rgba(30, 63, 102, 0.4)),   /* var(--azul-marinho) com 80% de opacidade */
+                /* Imagem de fundo */
+                url("https://upload.wikimedia.org/wikipedia/commons/e/ee/Povoado_Do_Po%C3%A7o_Grande_-_Araci.jpg");
+            background-size: cover;
+            background-position: center;
+            color: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            position: relative;
+            border-bottom: 3px solid var(--dourado-sol);
+        }
+        
+        /* Títulos e textos */
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+            font-family: 'Baloo 2', cursive;
+        }
+        
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        /* Estilos das abas */
+        .abas {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            justify-content: left;
+        }
+        
+        .aba-btn {
+            padding: 12px 20px;
+            background: var(--branco-nuvem);
+            color: var(--azul-marinho);
+            border: 2px solid var(--azul-ceu);
+            border-radius: 50px;
+            cursor: pointer;
+            white-space: nowrap;
+            flex-shrink: 0;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin: 5px;
+        }
+        
+        .aba-btn:hover {
+            transform: translateY(-2px);
+            border-color: var(--azul-marinho);
+            box-shadow: 0 5px 10px rgba(30, 63, 102, 0.2);
+        }
+        
+        .aba-btn.ativa {
+            background: var(--azul-marinho);
+            color: white;
+            border-color: var(--azul-marinho);
+            box-shadow: 0 5px 15px rgba(30, 63, 102, 0.3);
+        }
+        
+        /* Conteúdo das abas */
+        .conteudo-aba {
+            display: none;
+        }
+        
+        .conteudo-aba.ativa {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        /* Grid de itens */
+        .itens {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+        
+        /* Estilos dos cards de itens */
+        .item {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            border: 1px solid var(--azul-ceu);
+        }
+        
+        .item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(30, 63, 102, 0.15);
+        }
+        
+        .item-img-container {
+             width: 100%;
+            height: 0;
+            padding-bottom: 90%; /* Mantém proporção quadrada */
+            overflow: hidden;
+            position: relative;
+            background: var(--branco-nuvem);
+        }  
+
+        .item img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 10px;
+            transition: transform 0.5s ease;
+        }
+
+        /* Para mobile - proporção mais retangular */
+        @media (max-width: 768px) {
+        .item-img-container {
+            padding-bottom: 75%; /* 4:3 em vez de 1:1 */
+    }
+}
+        
+        .item:hover img {
+            transform: scale(1.1);
+        }
+        
+        /* Informações do item */
+        .item-info {
+            padding: 20px;
+        }
+        
+        .item-cabecalho {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            align-items: center;
+        }
+        
+        .item-nome {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--azul-marinho);
+        }
+        
+        body.tema-escuro .item-nome {
+            color: #f0f0f0;
+        }
+        
+        .item-preco {
+            background: var(--azul-marinho);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        
+        .item-descricao {
+            color: #6c757d;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        
+        /* Destaque para itens especiais */
+        .destaque {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--dourado-sol);
+            color: var(--azul-marinho);
+            padding: 4px 10px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            z-index: 1;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        /* Controles do tema */
+        .controles {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+        
+        .tema-btn {
+            padding: 8px 15px;
+            background: var(--azul-marinho);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .tema-btn:hover {
+            background: var(--azul-ceu);
+            color: var(--azul-marinho);
+        }
+        
+        /* Animações */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Responsividade - Tablet */
+        @media (min-width: 600px) {
+            .itens {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .item-img-container {
+                height: 220px;
+            }
+        }
+        
+        /* Responsividade - Desktop */
+        @media (min-width: 900px) {
+            body {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 30px;
+            }
+            
+            .itens {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 30px;
+            }
+            
+            .item-img-container {
+                height: 300px;
+            }
+            
+            header {
+                padding: 40px 20px;
+            }
+        }
+
+        /* Responsividade - Mobile pequeno */
+        @media (max-width: 480px) {
+            .aba-btn {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Elementos decorativos */
+        header::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(to right, var(--azul-ceu), var(--verde-agua), var(--dourado-sol));
+            border-radius: 0 0 16px 16px;
+        }
+
+        .item::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--azul-ceu);
+        }
+
+        /* NOVOS ESTILOS PARA MOBILE - ADICIONE NO FINAL */
+    @media (max-width: 768px) {
+        .abas {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 10px 0 15px;
+            margin: 0 15px 20px;
+            gap: 8px;
+            scrollbar-width: none;
+        }
+        
+        .abas::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .aba-btn {
+            flex: 0 0 auto;
+            padding: 12px 16px;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin: 0;
+        }
+        
+        .abas::after {
+            content: "";
+            flex: 0 0 15px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .aba-btn {
+            padding: 10px 14px;
+            font-size: 0.85rem;
+        }
+        
+        .abas {
+            gap: 6px;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+    }
+
+    @media (max-width: 768px) {
+    .item-img-container {
+        aspect-ratio: 4/3; /* Proporção mais retangular para mobile */
+        }
+    
+    .item img {
+        object-fit: cover; /* Pode usar cover em mobile se preferir */
+        padding: 5px;
+        }
+    }
+    body.tema-escuro .aba-btn {
+        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+    </style>
+</head>
+<body>
+    <!-- Cabeçalho do site -->
+    <header>
+        <h1>Quiosque Céu Azul</h1>
+        <p>Feito pra te atender bem</p>
+    </header>
+    
+    <!-- Controles (botão de tema) -->
+    <div class="controles">
+        <button class="tema-btn" onclick="alternarTema()">
+            <span id="tema-icone">🌙</span> <span id="tema-texto">Tema Escuro</span>
+        </button>
+    </div>
+    
+    <!-- ÁREA DAS ABAS -->
+    <div class="abas">
+        <button class="aba-btn ativa" onclick="mostrarAba('cervejas')">🍺 Cervejas</button>
+        <button class="aba-btn" onclick="mostrarAba('bebidas')">🥃 Bebidas Quentes</button>
+        <button class="aba-btn" onclick="mostrarAba('comidas')">🍽️ Comidas</button>
+        <button class="aba-btn" onclick="mostrarAba('ices')">🧊 Ices</button>
+        <button class="aba-btn" onclick="mostrarAba('petiscos')">🍟 Petiscos</button>
+    </div>
+    
+    <!-- Conteúdo principal -->
+    <div class="conteudo-principal">
+        <!-- ABA CERVEJAS -->
+        <div id="cervejas" class="conteudo-aba ativa">
+            <div class="itens">
+                <!-- Item 1 - Brahma -->
+                <div class="item">
+                    <div class="destaque">NOVO</div>
+                    <div class="item-img-container">
+                        <img src="brahma.png" alt="Brahma">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Brahma Duplo Malte</span>
+                            <span class="item-preco">R$ 10,00</span>
+                        </div>
+                        <p class="item-descricao">Cerveja premium com sabor encorpado e refrescante, perfeita para momentos de descontração. Lata 350ml.</p>
+                    </div>
+                </div>
+                
+                <!-- Item 2 - Stella Artois -->
+                <div class="item">
+                    <div class="item-img-container">
+                        <img src="stellaartois.png" alt="Stella Artois">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Stella Artois</span>
+                            <span class="item-preco">R$ 8,00</span>
+                        </div>
+                        <p class="item-descricao">Cerveja belga premium com tradição secular, sabor equilibrado e refrescante. Garrafa 330ml.</p>
+                    </div>
+                </div>
+                
+                <!-- Item 3 - Heineken -->
+                <div class="item">
+                    <div class="item-img-container">
+                        <img src="heineken.png" alt="Heineken">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Heineken Long Neck</span>
+                            <span class="item-preco">R$ 10,00</span>
+                        </div>
+                        <p class="item-descricao">Cerveja puro malte importada com sabor característico e refrescante. Garrafa 330ml.</p>
+                    </div>
+                </div>
+                
+                <!-- Item 4 - Antarctica -->
+                <div class="item">
+                    <div class="destaque">POPULAR</div>
+                    <div class="item-img-container">
+                        <img src="antartica.png" alt="Antarctica">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Antarctica Puro Malte</span>
+                            <span class="item-preco">R$ 6,00</span>
+                        </div>
+                        <p class="item-descricao">Cerveja brasileira com sabor suave e refrescante, ideal para acompanhar petiscos. Lata 600ml.</p>
+                    </div>
+                </div>
+                
+                <!-- Item 5 - Budweiser -->
+                <div class="item">
+                    <div class="item-img-container">
+                        <img src="budweiser.png" alt="Budweiser">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Budweiser Long Neck</span>
+                            <span class="item-preco">R$ 8,00</span>
+                        </div>
+                        <p class="item-descricao">Cerveja americana premium com sabor equilibrado e refrescante. Garrafa 330ml.</p>
+                    </div>
+                </div>
+                
+                <!-- Item 6 - Devassa Tropical -->
+                <div class="item">
+                    <div class="item-img-container">
+                        <img src="devassa.png" alt="Devassa">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Devassa Tropical</span>
+                            <span class="item-preco">R$ 10,00</span>
+                        </div>
+                        <p class="item-descricao">Cerveja artesanal brasileira com notas de frutas tropicais e refrescância única. Garrafa 600ml.</p>
+                    </div>
+                </div>
+                
+                <!-- Item 7 - Skol -->
+                <div class="item">
+                    <div class="destaque">A QUE DESCE REDONDO</div>
+                    <div class="item-img-container">
+                        <img src="skol.png" alt="Skol">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Skol</span>
+                            <span class="item-preco">R$ 10,00</span>
+                        </div>
+                        <p class="item-descricao">Cerveja artesanal com mel e especiarias, sabor complexo e aroma marcante. Garrafa 600ml.</p>
+                    </div>
+                </div>
+                
+                <!-- Item 8 - Cristal -->
+                <div class="item">
+                    <div class="item-img-container">
+                        <img src="crystal.png" alt="Cristal">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Cristal</span>
+                            <span class="item-preco">R$ 8,00</span>
+                        </div>
+                        <p class="item-descricao">Cerveja artesanal com notas de caramelo e frutas vermelhas, corpo médio e final suave. Garrafa 600ml.</p>
+                    </div>
+                </div>
+
+                <!-- Item 9 - Lokal -->
+                <div class="item">
+                    <div class="item-img-container">
+                        <img src="lokal.png" alt="Lokal">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Lokal</span>
+                            <span class="item-preco">R$ 8,00</span>
+                        </div>
+                        <p class="item-descricao">Cerveja escura com notas de café e chocolate, ideal para quem aprecia sabores intensos. Garrafa 600ml.</p>
+                    </div>
+                </div>
+                
+                <!-- Item 10 - Sub Zero -->
+                <div class="item">
+                    <div class="item-img-container">
+                        <img src="subzero.png" alt="Subzero">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Sub Zero</span>
+                            <span class="item-preco">R$ 8,00</span>
+                        </div>
+                        <p class="item-descricao">Cerveja de trigo com notas cítricas e refrescantes, perfeita para dias quentes. Garrafa 600ml.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ABA BEBIDAS -->
+        <div id="bebidas" class="conteudo-aba">
+            <div class="itens">
+                <div class="item">
+                    <div class="destaque">POPULAR</div>
+                    <div class="item-img-container">
+                        <img src="https://www.imigrantesbebidas.com.br/bebida/images/products/full/1024_Whisky_Johnnie_Walker_Red_Label_1L.jpg" alt="Whisky">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Whisky Johnnie Walker</span>
+                            <span class="item-preco">R$ 28,00</span>
+                        </div>
+                        <p class="item-descricao">Red Label, blend escocês suave e versátil, perfeito para drinks ou degustação pura. Dose 50ml.</p>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="item-img-container">
+                        <img src="https://www.imigrantesbebidas.com.br/bebida/images/products/full/2276_Gin_Bombay_Sapphire_750ml.jpg" alt="Gin">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Gin Tônica Premium</span>
+                            <span class="item-preco">R$ 32,00</span>
+                        </div>
+                        <p class="item-descricao">Gin Bombay Sapphire com tônica premium, gelo, limão siciliano e especiarias selecionadas.</p>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="item-img-container">
+                        <img src="https://www.absolut.com/wp-content/uploads/2020/10/absolut-vodka-50cl.png" alt="Vodka">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Vodka Absolut</span>
+                            <span class="item-preco">R$ 25,00</span>
+                        </div>
+                        <p class="item-descricao">Vodka sueca premium, pura e cristalina, ideal para drinks ou shots. Dose 50ml.</p>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="destaque">NOVO</div>
+                    <div class="item-img-container">
+                        <img src="https://www.imigrantesbebidas.com.br/bebida/images/products/full/1033_Whisky_Jack_Daniels_1L.jpg" alt="Jack Daniels">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Whisky Jack Daniels</span>
+                            <span class="item-preco">R$ 34,00</span>
+                        </div>
+                        <p class="item-descricao">Whisky Tennessee com processo de filtragem especial, sabor suave e aromático. Dose 50ml.</p>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="item-img-container">
+                        <img src="https://www.imigrantesbebidas.com.br/bebida/images/products/full/1041_Whisky_Chivas_Regal_12_Anos_1L.jpg" alt="Chivas">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Whisky Chivas 12 anos</span>
+                            <span class="item-preco">R$ 38,00</span>
+                        </div>
+                        <p class="item-descricao">Blend escocês envelhecido 12 anos, complexo e sofisticado. Para degustação pura. Dose 50ml.</p>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="item-img-container">
+                        <img src="https://www.imigrantesbebidas.com.br/bebida/images/products/full/2280_Gin_Tanqueray_750ml.jpg" alt="Tanqueray">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Gin Tanqueray</span>
+                            <span class="item-preco">R$ 36,00</span>
+                        </div>
+                        <p class="item-descricao">Gin londrino premium com notas cítricas e botânicas, ideal para drinks sofisticados. Dose 50ml.</p>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="item-img-container">
+                        <img src="https://www.imigrantesbebidas.com.br/bebida/images/products/full/2240_Vodka_Skyy_1L.jpg" alt="Skyy">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Vodka Skyy</span>
+                            <span class="item-preco">R$ 23,00</span>
+                        </div>
+                        <p class="item-descricao">Vodka americana com filtragem quadrupla, sabor limpo e neutro. Dose 50ml.</p>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="destaque">ESPECIAL</div>
+                    <div class="item-img-container">
+                        <img src="https://www.imigrantesbebidas.com.br/bebida/images/products/full/1053_Whisky_Johnnie_Walker_Black_Label_1L.jpg" alt="Black Label">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Whisky Black Label</span>
+                            <span class="item-preco">R$ 45,00</span>
+                        </div>
+                        <p class="item-descricao">Blend escocês envelhecido 12 anos, complexo e sofisticado. Para momentos especiais. Dose 50ml.</p>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="item-img-container">
+                        <img src="https://www.imigrantesbebidas.com.br/bebida/images/products/full/2253_Vodka_Smirnoff_1L.jpg" alt="Smirnoff">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Vodka Smirnoff</span>
+                            <span class="item-preco">R$ 22,00</span>
+                        </div>
+                        <p class="item-descricao">Vodka russa com destilação tripla, versátil para diversos drinks. Dose 50ml.</p>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="item-img-container">
+                        <img src="https://www.imigrantesbebidas.com.br/bebida/images/products/full/1066_Whisky_Ballantines_1L.jpg" alt="Ballantines">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Whisky Ballantine's</span>
+                            <span class="item-preco">R$ 28,00</span>
+                        </div>
+                        <p class="item-descricao">Blend escocês suave e equilibrado, ideal para quem está começando no mundo dos whiskies. Dose 50ml.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ABA COMIDAS -->
+        <div id="comidas" class="conteudo-aba">
+            <div class="itens">
+                <div class="item">
+                    <div class="item-img-container">
+                        <img src="D:\Design sem nome (8).png" alt="Pirão de Peixe">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Porção de Peixe Frito</span>
+                            <span class="item-preco">R$ 45,90</span>
+                        </div>
+                        <p class="item-descricao">Tiras de filé mignon ao molho cremoso de champignon, acompanhado de arroz branco soltinho e batata palha crocante. Serve 2 pessoas.</p>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="destaque">RECOMENDADO</div>
+                    <div class="item-img-container">
+                        <img src="https://img.cybercook.com.br/receitas/776/file-mignon-ao-molho-madeira-3.jpeg" alt="Filé">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Filé Mignon ao Molho</span>
+                            <span class="item-preco">R$ 59,90</span>
+                        </div>
+                        <p class="item-descricao">Filé mignon grelhado no ponto perfeito (300g), servido com molho madeira ou mostarda e mel, acompanhado de arroz, batata sauté e legumes grelhados.</p>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="item-img-container">
+                        <img src="https://img.itdg.com.br/tdg/images/recipes/000/167/354/360055/360055_original.jpg" alt="Risoto">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Risoto de Funghi</span>
+                            <span class="item-preco">R$ 52,90</span>
+                        </div>
+                        <p class="item-descricao">Risoto cremoso preparado com cogumelos funghi secchi reidratados, vinho branco seco e queijo parmesão ralado na hora. Acompanha torradas de pão italiano.</p>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="destaque">NOVO</div>
+                    <div class="item-img-container">
+                        <img src="https://img.itdg.com.br/tdg/images/recipes/000/095/484/332941/332941_original.jpg" alt="Penne">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Penne ao Molho Pesto</span>
+                            <span class="item-preco">R$ 42,90</span>
+                        </div>
+                        <p class="item-descricao">Massa penne al dente com molho pesto de manjericão fresco, pinoli tostados, queijo parmesão e azeite de oliva extra virgem. Finalizado com tomate cereja.</p>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="item-img-container">
+                        <img src="https://img.itdg.com.br/tdg/images/recipes/000/000/770/323223/323223_original.jpg" alt="Frango">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Frango à Parmegiana</span>
+                            <span class="item-preco">R$ 48,90</span>
+                        </div>
+                        <p class="item-descricao">Filé de frango empanado crocante, coberto com molho de tomate caseiro e queijo derretido, acompanhado de arroz branco e batata frita rústica.</p>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="item-img-container">
+                        <img src="https://img.itdg.com.br/tdg/images/recipes/000/002/462/354878/354878_original.jpg" alt="Batata Frita">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Batata Frita Crocante</span>
+                            <span class="item-preco">R$ 25,90</span>
+                        </div>
+                        <p class="item-descricao">Porção generosa de batata frita crocante temperada com sal marinho e alecrim, acompanhada de molho especial da casa (cheddar cremoso, barbecue defumado ou mostarda e mel).</p>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="destaque">POPULAR</div>
+                    <div class="item-img-container">
+                        <img src="https://img.itdg.com.br/tdg/images/recipes/000/000/876/323471/323471_original.jpg" alt="Lasanha">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Lasanha à Bolonhesa</span>
+                            <span class="item-preco">R$ 54,90</span>
+                        </div>
+                        <p class="item-descricao">Camadas de massa fresca, molho bolonhesa caseiro, queijos derretidos e gratinada no forno. Acompanha pão de alho. Serve 2 pessoas.</p>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="item-img-container">
+                        <img src="https://img.itdg.com.br/tdg/images/recipes/000/173/847/360468/360468_original.jpg" alt="Salada">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Salada Caesar</span>
+                            <span class="item-preco">R$ 38,90</span>
+                        </div>
+                        <p class="item-descricao">Mix de folhas frescas, croutons caseiros, queijo parmesão em lascas e molho caesar cremoso. Opção com frango grelhado temperado.</p>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="item-img-container">
+                        <img src="https://img.itdg.com.br/tdg/images/recipes/000/000/023/323300/323300_original.jpg" alt="Feijoada">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Feijoada Completa</span>
+                            <span class="item-preco">R$ 64,90</span>
+                        </div>
+                        <p class="item-descricao">Prato tradicional brasileiro com feijão preto cozido lentamente, variedade de carnes, couve refogada, farofa crocante e laranja fresca. Serve 2 pessoas.</p>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="destaque">ESPECIAL</div>
+                    <div class="item-img-container">
+                        <img src="https://img.itdg.com.br/tdg/images/recipes/000/000/771/323224/323224_original.jpg" alt="Peixe">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Filé de Peixe Grelhado</span>
+                            <span class="item-preco">R$ 56,90</span>
+                        </div>
+                        <p class="item-descricao">Filé de peixe fresco grelhado com ervas finas, acompanhado de arroz de brócolis e purê de batata cremoso. Opção de molho de maracujá ou manteiga de limão siciliano.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA ICES -->
+        <div id="ices" class="conteudo-aba">
+            <div class="itens">
+                <div class="item">
+                    <div class="item-img-container">
+                        <img src="https://www.imigrantesbebidas.com.br/bebida/images/products/full/2145_Smirnoff_Ice_Original_275ml.jpg" alt="Smirnoff Ice">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Smirnoff Ice Original</span>
+                            <span class="item-preco">R$ 16,90</span>
+                        </div>
+                        <p class="item-descricao">Bebida refrescante com toque cítrico e leveza única. Garrafa 275ml.</p>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="item-img-container">
+                        <img src="https://www.imigrantesbebidas.com.br/bebida/images/products/full/2148_Smirnoff_Ice_Red_275ml.jpg" alt="Smirnoff Ice Red">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Smirnoff Ice Red</span>
+                            <span class="item-preco">R$ 17,90</span>
+                        </div>
+                        <p class="item-descricao">Sabor frutas vermelhas com toque suave de vodka e refrescância intensa. Garrafa 275ml.</p>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="destaque">NOVO</div>
+                    <div class="item-img-container">
+                        <img src="https://www.imigrantesbebidas.com.br/bebida/images/products/full/2149_Smirnoff_Ice_Storm_275ml.jpg" alt="Smirnoff Ice Storm">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Smirnoff Ice Storm</span>
+                            <span class="item-preco">R$ 17,90</span>
+                        </div>
+                        <p class="item-descricao">Sabor frutas tropicais com toque picante inovador e refrescância prolongada. Garrafa 275ml.</p>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="item-img-container">
+                        <img src="https://www.imigrantesbebidas.com.br/bebida/images/products/full/2146_Smirnoff_Ice_Green_Apple_275ml.jpg" alt="Smirnoff Ice Green Apple">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Smirnoff Ice Green Apple</span>
+                            <span class="item-preco">R$ 17,90</span>
+                        </div>
+                        <p class="item-descricao">Sabor maçã verde refrescante com equilíbrio perfeito entre doce e ácido. Garrafa 275ml.</p>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="item-img-container">
+                        <img src="https://www.imigrantesbebidas.com.br/bebida/images/products/full/2150_Smirnoff_Ice_Triple_Black_275ml.jpg" alt="Smirnoff Ice Triple Black">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Smirnoff Ice Triple Black</span>
+                            <span class="item-preco">R$ 18,90</span>
+                        </div>
+                        <p class="item-descricao">Sabor frutas negras intenso com toque sofisticado e refrescância marcante. Garrafa 275ml.</p>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="destaque">POPULAR</div>
+                    <div class="item-img-container">
+                        <img src="https://www.imigrantesbebidas.com.br/bebida/images/products/full/2151_Smirnoff_Ice_Zero_Açucar_275ml.jpg" alt="Smirnoff Ice Zero">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Smirnoff Ice Zero</span>
+                            <span class="item-preco">R$ 17,90</span>
+                        </div>
+                        <p class="item-descricao">Versão sem açúcar do clássico Smirnoff Ice, mantendo todo o sabor com menos calorias. Garrafa 275ml.</p>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="item-img-container">
+                        <img src="https://www.imigrantesbebidas.com.br/bebida/images/products/full/2152_Smirnoff_Ice_Zero_Açucar_Red_275ml.jpg" alt="Smirnoff Ice Zero Red">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Smirnoff Ice Zero Red</span>
+                            <span class="item-preco">R$ 18,90</span>
+                        </div>
+                        <p class="item-descricao">Versão sem açúcar do Smirnoff Ice Red, com sabor de frutas vermelhas e zero açúcar. Garrafa 275ml.</p>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="item-img-container">
+                        <img src="https://www.imigrantesbebidas.com.br/bebida/images/products/full/2153_Smirnoff_Ice_Zero_Açucar_Green_Apple_275ml.jpg" alt="Smirnoff Ice Zero Green Apple">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Smirnoff Ice Zero Green Apple</span>
+                            <span class="item-preco">R$ 18,90</span>
+                        </div>
+                        <p class="item-descricao">Versão sem açúcar do Smirnoff Ice Green Apple, sabor maçã verde refrescante sem adição de açúcares. Garrafa 275ml.</p>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="destaque">LANÇAMENTO</div>
+                    <div class="item-img-container">
+                        <img src="https://www.imigrantesbebidas.com.br/bebida/images/products/full/2154_Smirnoff_Ice_Zero_Açucar_Triple_Black_275ml.jpg" alt="Smirnoff Ice Zero Triple Black">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Smirnoff Ice Zero Triple Black</span>
+                            <span class="item-preco">R$ 19,90</span>
+                        </div>
+                        <p class="item-descricao">Versão sem açúcar do Smirnoff Ice Triple Black, sabor intenso de frutas negras sem adição de açúcares. Garrafa 275ml.</p>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="item-img-container">
+                        <img src="https://www.imigrantesbebidas.com.br/bebida/images/products/full/2155_Smirnoff_Ice_Zero_Açucar_Storm_275ml.jpg" alt="Smirnoff Ice Zero Storm">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Smirnoff Ice Zero Storm</span>
+                            <span class="item-preco">R$ 19,90</span>
+                        </div>
+                        <p class="item-descricao">Versão sem açúcar do Smirnoff Ice Storm, sabor frutas tropicais com toque picante e zero açúcar. Garrafa 275ml.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ABA PETISCOS -->
+        <div id="petiscos" class="conteudo-aba">
+            <div class="itens">
+                <div class="item">
+                    <div class="destaque">MAIS PEDIDO</div>
+                    <div class="item-img-container">
+                        <img src="https://img.itdg.com.br/tdg/images/recipes/000/002/462/354878/354878_original.jpg" alt="Batata Frita">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Batata Frita Crocante</span>
+                            <span class="item-preco">R$ 25,90</span>
+                        </div>
+                        <p class="item-descricao">Porção generosa de batata frita crocante temperada com sal marinho e alecrim, acompanhada de molho especial da casa (cheddar cremoso, barbecue defumado ou mostarda e mel).</p>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="item-img-container">
+                        <img src="https://www.receiteria.com.br/wp-content/uploads/receitas-de-pastel-de-carne-1.jpg" alt="Pastel">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Pastel de Carne</span>
+                            <span class="item-preco">R$ 14,90</span>
+                        </div>
+                        <p class="item-descricao">Pastel artesanal frito na hora, massa fina e crocante, recheado com carne moída temperada e azeitonas. 3 unidades.</p>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="item-img-container">
+                        <img src="https://img.cybercook.com.br/receitas/459/bolinho-de-bacalhau-1-840x480.jpeg?q=75" alt="Bolinho">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Bolinho de Bacalhau</span>
+                            <span class="item-preco">R$ 32,90</span>
+                        </div>
+                        <p class="item-descricao">Deliciosos bolinhos de bacalhau crocantes por fora e macios por dentro, preparados com bacalhau desfiado e batata. 6 unidades com molho tártaro caseiro.</p>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="destaque">NOVO</div>
+                    <div class="item-img-container">
+                        <img src="https://img.itdg.com.br/tdg/images/recipes/000/000/771/323224/323224_original.jpg" alt="Isca">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Isca de Peixe</span>
+                            <span class="item-preco">R$ 36,90</span>
+                        </div>
+                        <p class="item-descricao">Iscas de peixe empanadas e fritas, crocantes por fora e macias por dentro, acompanhadas de molho tártaro caseiro e limão fresco.</p>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="item-img-container">
+                        <img src="https://img.itdg.com.br/tdg/images/recipes/000/000/023/323300/323300_original.jpg" alt="Coxinha">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Coxinha de Frango</span>
+                            <span class="item-preco">R$ 21,90</span>
+                        </div>
+                        <p class="item-descricao">Coxinhas caseiras com massa macia e crocante, recheadas com frango desfiado temperado e catupiry cremoso. 5 unidades.</p>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="item-img-container">
+                        <img src="https://img.itdg.com.br/tdg/images/recipes/000/173/847/360468/360468_original.jpg" alt="Queijo">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Queijo Coalho</span>
+                            <span class="item-preco">R$ 28,90</span>
+                        </div>
+                        <p class="item-descricao">Queijo coalho grelhado na chapa até dourar, acompanhado de melado de cana artesanal ou molho de pimenta caseiro.</p>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="destaque">ESPECIAL</div>
+                    <div class="item-img-container">
+                        <img src="https://img.itdg.com.br/tdg/images/recipes/000/000/876/323471/323471_original.jpg" alt="Frango">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Asinha de Frango</span>
+                            <span class="item-preco">R$ 39,90</span>
+                        </div>
+                        <p class="item-descricao">Asinhas de frango temperadas com especiarias e grelhadas até ficarem douradas, acompanhadas de molho barbecue defumado ou picante da casa.</p>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="item-img-container">
+                        <img src="https://img.itdg.com.br/tdg/images/recipes/000/000/770/323223/323223_original.jpg" alt="Kibe">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Kibe Frito</span>
+                            <span class="item-preco">R$ 23,90</span>
+                        </div>
+                        <p class="item-descricao">Kibes fritos crocantes com massa de trigo temperada, recheados com carne moída e hortelã fresca. 8 unidades com molho de iogurte.</p>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="item-img-container">
+                        <img src="https://img.itdg.com.br/tdg/images/recipes/000/095/484/332941/332941_original.jpg" alt="Mandio">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Mandioquinha Frita</span>
+                            <span class="item-preco">R$ 27,90</span>
+                        </div>
+                        <p class="item-descricao">Palitos de mandioquinha fritos até ficarem crocantes por fora e macios por dentro, acompanhados de molho especial de ervas.</p>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="destaque">POPULAR</div>
+                    <div class="item-img-container">
+                        <img src="https://img.itdg.com.br/tdg/images/recipes/000/167/354/360055/360055_original.jpg" alt="Polenta">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-cabecalho">
+                            <span class="item-nome">Polenta Frita</span>
+                            <span class="item-preco">R$ 21,90</span>
+                        </div>
+                        <p class="item-descricao">Cubos de polenta frita crocantes por fora e cremosos por dentro, acompanhados de molho de queijo derretido e bacon crocante.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <!-- JavaScript -->
+     <script>
+        /**
+         * Função para mostrar/ocultar a aba selecionada
+         * @param {string} abaId - ID da aba a ser mostrada
+         */
+        function mostrarAba(abaId) {
+            // Esconde todos os conteúdos de abas
+            document.querySelectorAll('.conteudo-aba').forEach(aba => {
+                aba.classList.remove('ativa');
+            });
+            
+            // Remove a classe ativa de todos os botões
+            document.querySelectorAll('.aba-btn').forEach(btn => {
+                btn.classList.remove('ativa');
+            });
+            
+            // Mostra a aba selecionada
+            document.getElementById(abaId).classList.add('ativa');
+            
+            // Ativa o botão clicado
+            event.currentTarget.classList.add('ativa');
+            
+            // Scroll suave para o topo da seção
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+        
+        /**
+         * Função para alternar entre tema claro e escuro
+         */
+        function alternarTema() {
+            const body = document.body;
+            body.classList.toggle('tema-escuro');
+            
+            const temaIcone = document.getElementById('tema-icone');
+            const temaTexto = document.getElementById('tema-texto');
+            
+            if (body.classList.contains('tema-escuro')) {
+                temaIcone.textContent = '☀️';
+                temaTexto.textContent = 'Tema Claro';
+            } else {
+                temaIcone.textContent = '🌙';
+                temaTexto.textContent = 'Tema Escuro';
+            }
+        }
+    </script>
+</body>
+</html>
